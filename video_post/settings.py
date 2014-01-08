@@ -12,7 +12,8 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-
+FACEBOOK_APP_ID = 801760199839617
+FACEBOOK_SECRET_KEY = '5d522ed092add7bfa088be9e96e2f732'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
@@ -25,7 +26,6 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
-print TEMPLATE_DIRS
 
 ALLOWED_HOSTS = []
 
@@ -39,7 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'video_post.main',
+    'video_post.apps.main',
 )
 
 MIDDLEWARE_CLASSES = (
