@@ -12,8 +12,8 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-FACEBOOK_APP_ID = 801760199839617
-FACEBOOK_SECRET_KEY = '5d522ed092add7bfa088be9e96e2f732'
+FACEBOOK_APP_ID = ''
+FACEBOOK_SECRET_KEY = ''
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
