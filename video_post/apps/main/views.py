@@ -1,45 +1,68 @@
+from api import Api
+from django.conf import settings
+from django.http import HttpResponse
 from django.shortcuts import render
-from forms import VideoForm
-# Create your views here.
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+import facebook
+import json
+import os
+
 def index(request):
 
-	return render(request,'main/index.html')
+    submission_id = 103230
+    return render(request,'main/index.html', {'APP_ID':settings.FACEBOOK_APP_ID})
 
-def authenticate(request):
 
-	pass
-'''
-<?php 
-$app_id = "YOUR_APP_ID";
-$app_secret = "YOUR_APP_SECRET"; 
-$my_url = "YOUR_POST_LOGIN_URL"; 
-$video_title = "YOUR_VIDEO_TITLE";
-$video_desc = "YOUR_VIDEO_DESCRIPTION";
+def post_video(request):
 
-$code = $_REQUEST["code"];
+    '''
+    get the video url from the api
+    post it using the facebook(check should happen on client side but doing a sanity test is never a bad idea before attempting to post)
+    this will be an ajax call...responses to follow
+    '''
 
-if(empty($code)) {
-   $dialog_url = "http://www.facebook.com/dialog/oauth?client_id=" 
-     . $app_id . "&redirect_uri=" . urlencode($my_url) 
-     . "&scope=publish_stream";
-    echo("<script>top.location.href='" . $dialog_url . "'</script>");
-}
+    user = None
+    user = facebook.get_user_from_cookie(request.COOKIES, settings.FACEBOOK_APP_ID, settings.FACEBOOK_SECRET_KEY)
 
-$token_url = "https://graph.facebook.com/oauth/access_token?client_id="
-    . $app_id . "&redirect_uri=" . urlencode($my_url) 
-    . "&client_secret=" . $app_secret 
-    . "&code=" . $code;
-$access_token = file_get_contents($token_url);
- 
-$post_url = "https://graph-video.facebook.com/me/videos?"
-    . "title=" . $video_title. "&description=" . $video_desc 
-    . "&". $access_token;
+    if user.get('access_token'):
+        #let's get the user's 
+        #api = Api()    
+        #video = api.get_video_url(submission_id)
+        kwargs = {'title':'testing', 'description':'just a test'}
+        graph = facebook.GraphAPI(user['access_token'])
+        graph.put_media(os.path.join(os.getcwd(), 'sample_video.mp4'), None, False, **kwargs)
+        response = json.dumps({'status':200})
 
-echo '<form enctype="multipart/form-data" action=" '.$post_url.' "  
-     method="POST">';
-echo 'Please choose a file:';
-echo '<input name="file" type="file">';
-echo '<input type="submit" value="Upload" />';
-echo '</form>';
-?>
-'''
+    else:
+        #send back error stating they're not logged in(btw this should never happen)
+        response = json.dumps({'status':401})
+
+    return HttpResponse(response, mimetype='application/x-javascript')	
+
+def post_photo(request):
+
+    '''
+    this is just an example....you'd probably want to not post a static image but load one from a remote path on your machine
+    '''
+
+    user = None
+    user = facebook.get_user_from_cookie(request.COOKIES, settings.FACEBOOK_APP_ID, settings.FACEBOOK_SECRET_KEY)
+
+    if user.get('access_token'):
+        kwargs = {'title':'testing', 'description':'just a test'}
+        graph = facebook.GraphAPI(user['access_token'])
+        graph.put_media(os.path.join(os.getcwd(), 'http_slash.jpg'), None, True, **kwargs)
+        response = json.dumps({'status': 200})
+
+    else:
+        response = json.dumps({'status': 401, 'message': 'no access token found'})
+
+    return HttpResponse(response, mimetype='application/x-javascript')
+
+
+@csrf_exempt
+def save_access_token(request, access_token):
+
+    request.session['access_token'] = access_token
+    return HttpResponse(json.dumps({'status': 200}), mimetype='application/x-javascript')
+
