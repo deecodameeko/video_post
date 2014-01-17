@@ -12,15 +12,11 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-FACEBOOK_APP_ID = ''
-FACEBOOK_SECRET_KEY = ''
-FACEBOOK_REQUEST_PERMISSIONS = 'publish_actions'
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '^6j-a%srf5#rtu4db3%!bk56'
+SECRET_KEY = '^6j-a%p6#rtu4db3%!bk56'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
