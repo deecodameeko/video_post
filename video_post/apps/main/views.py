@@ -9,7 +9,6 @@ import os
 
 def index(request):
 
-    submission_id = 103230
     return render(request,'main/index.html', {'APP_ID':settings.FACEBOOK_APP_ID})
 
 
